@@ -1,0 +1,37 @@
+<html lang="en">
+  <%- include("../partials/head.ejs") %>
+
+  <body>
+    <%- include("../partials/nav.ejs") %>
+
+    <div class="details content">
+      <h2><%= blog.title %></h2>
+      <div class="content">
+        <p><%= blog.body %></p>
+      </div>
+      <a class="delete" data-id="<%= blog._id %>">delete</a>
+    </div>
+
+    <%- include("../partials/footer.ejs") %>
+
+    <script>
+      function confirmation() {
+        var result = confirm("Are you sure to delete?");
+        if (result) {
+          return true;
+        }
+      }
+      const delBtn = document.querySelector("a.delete");
+      delBtn.addEventListener("click", (e) => {
+        confirmation();
+        const endpoint = `/blogs/${delBtn.dataset.id}`;
+        fetch(endpoint, {
+          method: "DELETE",
+        })
+          .then((response) => response.json()) // This line of codewill convert the json recieved to a useful javascript object and return a another promise.
+          .then((data) => (window.location.href = data.redirect)) //Getting the actual data from the server.
+          .catch((err) => console.log(err));
+      });
+    </script>
+  </body>
+</html>
